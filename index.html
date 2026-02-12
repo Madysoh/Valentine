@@ -46,7 +46,7 @@ button:hover{ transform:scale(1.1); }
 
 .heart{
     position:fixed;
-    font-size:24px;
+    font-size:55px;
     cursor:pointer;
     animation: fall linear;
 }
@@ -133,7 +133,7 @@ function startCatch(){
         h.className = "heart";
         h.innerHTML = "💗";
         h.style.left = Math.random()*100+"vw";
-        h.style.fontSize = "40px";
+        h.style.fontSize = "55px";
         h.style.animationDuration = (Math.random()*2+8)+"s";
 
         h.onclick = ()=>{
@@ -142,7 +142,7 @@ function startCatch(){
             document.getElementById("score").innerText = caught+" / 7";
             if(caught>=7){
                 clearInterval(interval);
-                setTimeout(()=>go('items'),600);
+                setTimeout(()=>go('items'),1000);
             }
         }
 
@@ -206,5 +206,6 @@ function secret(){
 </body>
 
 </html>
+
 
 
