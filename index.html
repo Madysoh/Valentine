@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Попробуй пройти невъебенный квест</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    background: linear-gradient(135deg,rgb(255, 236, 204),#ff678f);
+    font-family: 'Segoe UI', sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    overflow:hidden;
+}
+
+.screen{
+    display:none;
+    background: rgba(255,255,255,0.18);
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    max-width:440px;
+    backdrop-filter: blur(10px);
+    animation: fade .8s ease;
+}
+
+.active{ display:block; }
+
+button{
+    margin:8px;
+    padding:12px 22px;
+    border:none;
+    border-radius:25px;
+    background:#ff5c88;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{ transform:scale(1.1); }
+
+.heart{
+    position:fixed;
+    font-size:24px;
+    cursor:pointer;
+    animation: fall linear;
+}
+
+@keyframes fall{
+    from{ top:-40px; }
+    to{ top:100vh; }
+}
+
+@keyframes fade{
+    from{opacity:0; transform:scale(.9);}
+    to{opacity:1; transform:scale(1);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="screen active" id="intro">
+    <h1>ЧТООО КВЕСТ ОГО</h1>
+    <p>
+        Нажми на кнопку ниже, не кусается(наверное)<br>
+        Уровень здесь khlkhchsh 
+    </p>
+    <button onclick="go('quest')">КНОПКА</button>
+</div>
+
+<!-- QUEST -->
+<div class="screen" id="quest">
+    <h2>Первое задание</h2>
+    <p>Слови сердечки и съешь</p>
+    <p id="score">0 / 7</p>
+    <button onclick="startCatch()">НАЧАТЬ</button>
+</div>
+
+<!-- ITEMS -->
+<div class="screen" id="items">
+    <h2>Dice room XD(Isaac)</h2>
+    <p>Roll a random item:</p>
+    <button onclick="rollItem()">ROLL</button>
+    <p id="item"></p>
+    <button onclick="go('boss')">Continue ➜</button>
+</div>
+
+<!-- BOSS -->
+<div class="screen" id="boss">
+    <h2>Kill the Mom(from Isaac)</h2>
+    <p>HP: <span id="hp">20</span></p>
+    <button onclick="hit()">BLOW UP THAT BITCH!!</button>
+</div>
+
+<!-- FINAL -->
+<div class="screen" id="final">
+    <h2>Молодец, ты завершил квест!!</h2>
+    <p>
+        Теперь к самому главному,<br>
+        Тебе предназначено несколько плюшек:
+    </p>
+
+    <button onclick="ending()">Моя любовь к тебе</button>
+    <button onclick="silk()">Валентинка</button>
+    <button onclick="secret()">Ещё приколюха</button>
+
+    <p id="out"></p>
+</div>
+
+<script>
+let caught = 0;
+let bossHP = 20;
+let hasItem = false;
+
+function go(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function startCatch(){
+    caught = 0;
+    document.getElementById("score").innerText = "0 / 7";
+
+    let interval = setInterval(()=>{
+        let h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "💗";
+        h.style.left = Math.random()*100+"vw";
+        h.style.animationDuration = (Math.random()*2+3)+"s";
+
+        h.onclick = ()=>{
+            caught++;
+            h.remove();
+            document.getElementById("score").innerText = caught+" / 7";
+            if(caught>=7){
+                clearInterval(interval);
+                setTimeout(()=>go('items'),600);
+            }
+        }
+
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),5000);
+    },500);
+}
+
+function rollItem(){
+    const items = [
+        "Tech X",
+        "Mom's Knife",
+        "Death's Touch",
+        "Cricket's Head",
+        "TMTRAINER",
+        "Terra",
+        "Astral Projection",
+        "Spirit Sword",
+        "Star of Bethlehem",
+        "Salvation",
+        "Revelation",
+        "Psy Fly",
+        "Brimstone",
+        "C Section",
+        "Mega Mush",
+        "Glitched Crown",
+        "Flip",
+        "Genesis",
+        "Magdalene :3"
+    ];
+    let pick = items[Math.floor(Math.random()*items.length)];
+    document.getElementById("item").innerHTML =
+        "You got: <b>"+pick+"</b>";
+    hasItem = true;
+}
+
+function hit(){
+    let dmg = hasItem ? 2 : 1;
+    bossHP -= dmg;
+    document.getElementById("hp").innerText = bossHP;
+    if(bossHP<=0){
+        setTimeout(()=>go('final'),500);
+    }
+}
+
+function ending(){
+    document.getElementById("out").innerHTML =
+        "Несмотря на все сложности в этой жизни, для меня ты самый лучший человек. Мне не надо повода, чтобы любить тебя, мне хватит лишь одной твоей улыбки, потому что она прекрасна, как и ты сам <3. Никит, я очень хочу тебе сказать, что я благодарна тебе за твое появление, ты подарил мне столько положительных эмоций, что я готова идти с тобой дальше и радоваться жизни";
+}
+
+function silk(){
+    document.getElementById("out").innerHTML ="Ты будешь моей валентинкой не только 14 февраля, но и каждый день. Мне не нужен лишь один праздник, чтобы дарить всю свою любовь тебе, я буду делать это всегда и показывать насколько ты мне важен. Люблю тебя, my husband!!";
+}
+
+function secret(){
+    document.getElementById("out").innerHTML =
+        "Знаешь чего я больше всего хочу? Обнять тебя крепко-крепко и украсить твое лико нежно-розовой помадой *lots of mwaaah*. Тебе понравилось?";
+}
+</script>
+
+</body>
+</html>
